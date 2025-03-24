@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Code Redemption</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Roboto', sans-serif;
+            background-color: #f4f6f9;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+        .container {
+            background: #ffffff;
+            width: 100%;
+            max-width: 400px;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        .container:hover {
+            box-shadow: 0 12px 24px rgba(0, 0, 0, 0.2);
+        }
+
+        h1 {
+            color: #333;
+            font-size: 28px;
+            margin-bottom: 20px;
+        }
+
+        p {
+            font-size: 14px;
+            color: #555;
+            margin-bottom: 20px;
+        }
+
+        input[type="text"] {
+            width: 100%;
+            padding: 12px;
+            font-size: 16px;
+            margin: 10px 0;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            outline: none;
+            transition: border-color 0.3s ease;
+        }
+
+        input[type="text"]:focus {
+            border-color: #4CAF50;
+        }
+
+        button {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            padding: 12px 20px;
+            width: 100%;
+            font-size: 18px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        button:hover {
+            background-color: #45a049;
+        }
+
+        .message {
+            margin-top: 20px;
+            font-weight: bold;
+            font-size: 16px;
+            transition: color 0.3s ease;
+        }
+
+        .success {
+            color: #28a745;
+        }
+
+        .error {
+            color: #e74c3c;
+        }
+
+        .footer {
+            margin-top: 20px;
+            font-size: 12px;
+            color: #888;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>Redeem Your Code</h1>
+    <p>Enter your one-time code to get started.</p>
+    <input type="text" id="codeInput" placeholder="Enter Code">
+    <button onclick="redeemCode()">Redeem</button>
+    <div class="message" id="message"></div>
+
+    <div class="footer">
+        <p>Powered by OGs helpbot</p>
+    </div>
+</div>
+
+<script>
+    // This is a mock of server-side data. In a real scenario, this would come from a database.
+    const validCodes = [
+        "CODE123", "DISCOUNT2025", "PROMO567", "kz6PLhrt3oR4kMdo", "iZijiUMuZvMqETQd", 
+        "dpTYysVzyfNgV5Nk", "agFL8LEM1h9Cw0QB", "otHPQGngtsYNbTMW", "rZPxSZn9634A7wMZ", 
+        "bxCKmExr6Syqx2Z4", "DTMlNCz2riASrkCU", "AdIvJfzR4jBd7fr6", "Sd3H19EPpUrepqZt", 
+        "UIRJZuk5l8ucKdVY", "fnDIe9MuWy7ah1o5", "H0AYVyoZDARUnO4q", "Iu24zuNelL5VXOQp", 
+        "5dbMbd3xYCrC6Cmd", "VsAsTpMyBvBNfa1r", "oPMopCd2DLwmgvZU", "wMwWczYQ127z6yeY", 
+        "vv1DulzYm9qcgfN0", "Mphfnnw6gkIbLuIt", "Dxdp6ZGT8BTmzTKE", "7yOv0HmoiL9ylvVM", 
+        "Zo1wCgEghpofewVh", "W9OwsZbpzoCTr4zh", "gxXHPogVxxCuqt2C", "0BCLvl6sEA1EL9jS", 
+        "LAlBOziOZO9Z1qWG", "r9sg5fqtzIBWQwIM", "yd10Z7i4UpREPc8b", "oDBEhCCeeDmFVXeH", 
+        "dPZJinCKCsHqZfAR", "XaxLU6Zcf3uMTmNZ", "n2QKgInGJ5YX6BvR", "m0pXIY2dqdetMttQ", 
+        "4BDjPRWXeFH9beuU", "syJoO5iPv8IvDE9h", "QC1DXDzzNu74Zolg", "lfsUC6hJk1LxWiMr", 
+        "1ewfwHFWEnVOAz5I", "15EbMkcb3bU39jeC", "NjpsUiQRdIlvJk8H", "hFyHxAaxNWKAl3B2", 
+        "cCfyjwnLQHQ7Ew6y", "b1zlowb94lAkjbd0", "ApN7Mi9RLZH7xC4L", "i8x4D5CGIBj8g9VA", 
+        "6Or4NpaKKpKakNqv", "6UjcY30k1EGwKR1j", "lgR0qdvSVdEkEaSa", "EHRKSu73Aauv9Gwl", 
+        "0B6UcmoTvbA86S4K", "7yKndM8OrxdaObkT", "32Lm4u0vEbsuPqVP", "EmNK0ngGKbuhkDKt", 
+        "i8KmpXlR5urUuz5m", "j8xiCXgsugS0UyCW", "JcGVnOdf2jxcRyrY", "AqLRIzun6n5TezjZ", 
+        "MX0d09aIJulmiUwV", "7qEyYv2gYP3sdh3W", "qXVl78Ql1jUSNJv3", "vn0s8CvuBMJmzogF", 
+        "TuY2HEFZHE8qPiW2", "ing670HlsxcAMYU8", "ICeXDyFwqHAVncBy", "m4roShMIydC7xQEV", 
+        "6Kw3kt1jXMzOcfUc", "5UkyM9g3XDTdYg6b", "JtRh4R4oAaIeDukh", "Cwj75zGdkgPq7SFy", 
+        "v7HCaOyzd5HkeodT", "GRMD3kBNt4bjfQLa", "vJodo2X1jb31e6Ts", "gPjqO5wKhrRrCWDU", 
+        "CBOMBD72s83nuChd", "hmfdhJ1ubdZxo6Pe", "yWc9NtyESPEKXAJf", "KcQbocRvP1uCrO8x", 
+        "ldfb1CPajcI7SRhk", "XY30bJjGOEJqyA9V", "yaKaf8gazCElG4Hw", "2rjwy5I3M4pUZdFl", 
+        "aLwsiygX7dg80Jk7", "hiRsZWyYJ4TymqsO", "R2g6T8NBT7zEEcZJ", "EeqratxDIPhu457u", 
+        "hPs99X86bfdI4kwq", "q8VPZsZ7bNnYy1sJ", "hR5CCTj1ZfOd1BFq", "5uTcDsSeFAsmFtBA", 
+        "P2kucGKrNmhzwuK7", "ZbqBaNMM9AZb3FkN", "7xKtFgOgHqLBcbdu", "Ct9OR92c9MlsmFH9", 
+        "hjAPacsx4XnW14sv", "MxiS8nCQyqM3Phxq", "Jrqs0N4lhTLSdDS2", "WxNkCbprkWlYTt7V", 
+        "mQVukI3gHpSrV3nl", "kOQLpMBRXqpcNtvx","test1"
+    ];
+
+    // Check if a code has already been redeemed (stored in localStorage)
+    function redeemCode() {
+        const code = document.getElementById('codeInput').value;
+        const messageElement = document.getElementById('message');
+        
+        if (!code) {
+            messageElement.textContent = 'Please enter a code!';
+            messageElement.classList.add('error');
+            messageElement.classList.remove('success');
+            return;
+        }
+
+        // Check if the code has already been redeemed using localStorage
+        const redeemedCodes = JSON.parse(localStorage.getItem('redeemedCodes')) || [];
+
+        if (redeemedCodes.includes(code)) {
+            messageElement.textContent = 'This code has already been redeemed.';
+            messageElement.classList.add('error');
+            messageElement.classList.remove('success');
+            return;
+        }
+
+        // Simulate a delay like an actual server request
+        setTimeout(() => {
+            // Check if the code is valid
+            if (validCodes.includes(code)) {
+                // Add the redeemed code to localStorage to persist it even after page refresh
+                redeemedCodes.push(code);
+                localStorage.setItem('redeemedCodes', JSON.stringify(redeemedCodes));
+                
+                messageElement.textContent = 'Code redeemed successfully!';
+                messageElement.classList.add('success');
+                messageElement.classList.remove('error');
+
+                // Redirect to the provided Google Form URL
+                window.location.href = 'https://docs.google.com/forms/d/e/1FAIpQLSdGEkqLc3eWDviVxrP4PmL_XjDGfKDQBJaDR4p-NYS9-zmiwg/viewform?usp=header';
+            } else {
+                messageElement.textContent = 'Invalid or already used code.';
+                messageElement.classList.add('error');
+                messageElement.classList.remove('success');
+            }
+        }, 1000); // Simulate a network delay
+    }
+</script>
+
+</body>
+</html>
